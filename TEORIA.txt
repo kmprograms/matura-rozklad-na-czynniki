@@ -1,0 +1,122 @@
+-----------------------------------------------------------------------------------------------------------------------
+Rozkład na czynniki pierwsze
+-----------------------------------------------------------------------------------------------------------------------
+
+Liczba pierwsza to liczba naturalna większa od 1, która ma dokładnie dwa dzielniki 
+naturalne. Są to jedynka i ta liczba. Przykładem jest 13. Dzieli się tylko przez 1 
+i przez 13.
+
+Liczba złożona to liczba naturalna większa od 1, która ma więcej niż dwa dzielniki 
+naturalne. Przykładem jest 12. Dzieli się przez 1, 2, 3, 4, 6 i 12. Liczba 1 nie 
+jest ani pierwsza, ani złożona, bo ma tylko jeden dzielnik naturalny.
+
+Liczby pierwsze:   2, 3, 5, 7, 11, 13, 17, 19, 23, 29, ...
+
+Dzielniki 13:      1, 13                    ->  pierwsza
+Dzielniki 12:      1, 2, 3, 4, 6, 12        ->  złożona
+Dzielniki 1:       1                        ->  ani pierwsza, ani złożona
+
+Rozkład na czynniki pierwsze to zapis liczby jako iloczynu liczb pierwszych. Weźmy 
+liczbę 420. 
+
+420 = 2 · 2 · 3 · 5 · 7
+420 = 2² · 3 · 5 · 7                        (postać potęgowa)
+
+wszystkie czynniki:   2, 2, 3, 5, 7     ->  5 czynników
+różne czynniki:       2, 3, 5, 7        ->  4 różne czynniki
+
+Każda liczba naturalna większa od 1 ma dokładnie jeden taki rozkład, jeśli nie liczymy 
+kolejności czynników. To twierdzenie nazywa się podstawowym twierdzeniem arytmetyki. 
+Dlatego mówimy "rozkład liczby", a nie "jeden z rozkładów".
+
+-----------------------------------------------------------------------------------------------------------------------
+Algorytm opiera się na trzech własnościach.
+-----------------------------------------------------------------------------------------------------------------------
+
+1.  Najmniejszy dzielnik liczby n większy od 1 jest liczbą pierwszą.
+
+Przykład:  n = 105
+2 nie dzieli 105
+3 dzieli 105                 ->  najmniejszy dzielnik to 3, liczba pierwsza
+15 też dzieli 105, ale 15 = 3 · 5
+3 dzieli 15, a 15 dzieli 105  ->  3 dzieli 105 i jest mniejsze od 15
+
+
+2.  Jeśli n = a · b oraz a ≤ b, to a ≤ √n.
+
+Przykład:  n = 36,  √36 = 6
+
+36 = 1 · 36
+36 = 2 · 18
+36 = 3 · 12
+36 = 4 · 9
+36 = 6 · 6                   ->  mniejsza liczba z pary nigdy nie przekracza 6
+7 · 7 = 49 > 36              ->  dwie liczby większe od 6 dają iloczyn większy od 36
+
+
+3.  Jeśli n ≥ 2 i żadna liczba od 2 do √n nie dzieli n, to n jest liczbą pierwszą.
+
+n = 97,  √97 ≈ 9,8      sprawdzamy 2, 3, 4, 5, 6, 7, 8, 9   ->  żadna nie dzieli   ->  pierwsza
+n = 91,  √91 ≈ 9,5      sprawdzamy 2, 3, 4, 5, 6, 7         ->  7 dzieli 91        ->  złożona
+                                                                91 = 7 · 13
+
+-----------------------------------------------------------------------------------------------------------------------
+Prosty algorytm - dzielenie przez kolejne liczby
+-----------------------------------------------------------------------------------------------------------------------   
+
+Na wejściu mamy liczbę naturalną n większą od 1. Na wyjściu chcemy otrzymać jej 
+czynniki pierwsze od najmniejszego do największego.
+
+d ← 2
+dopóki n > 1 wykonuj
+    jeżeli n mod d = 0
+        wypisz d
+        n ← n div d
+    w przeciwnym razie
+        d ← d + 1
+
+krok    n     d    n mod d    operacja
+ 1      420   2    0          wypisz 2,  n ← 210
+ 2      210   2    0          wypisz 2,  n ← 105
+ 3      105   2    1          d ← 3
+ 4      105   3    0          wypisz 3,  n ← 35
+ 5      35    3    2          d ← 4
+ 6      35    4    3          d ← 5
+ 7      35    5    0          wypisz 5,  n ← 7
+ 8      7     5    2          d ← 6
+ 9      7     6    1          d ← 7
+10      7     7    0          wypisz 7,  n ← 1
+        1                     n = 1, koniec          ->  2, 2, 3, 5, 7        
+
+Ta wersja ma jedną wadę. Dla liczby pierwszej pętla dochodzi aż do samego n. Dla 97 wykonuje 96 obrotów. Dla liczby 
+1 000 000 007, która też jest pierwsza, wykonuje ponad miliard obrotów.        
+
+
+-----------------------------------------------------------------------------------------------------------------------
+Szybki algorytm - dzielenie do pierwiastka
+-----------------------------------------------------------------------------------------------------------------------   
+
+d ← 2
+dopóki d · d ≤ n wykonuj
+    dopóki n mod d = 0 wykonuj
+        wypisz d
+        n ← n div d
+    d ← d + 1
+jeżeli n > 1
+    wypisz n
+
+
+d    d · d    n przed    dzielenia           n po
+2    4        420        wypisz 2, 2         105
+3    9        105        wypisz 3            35
+4    16       35         -                   35
+5    25       35         wypisz 5            7
+6    36       7          36 > 7, koniec pętli
+                         n = 7 > 1, wypisz 7                ->  2, 2, 3, 5, 7    
+
+Skąd pewność, że to, co zostało po pętli, jest liczbą pierwszą? Wszystkie czynniki mniejsze od d zostały już wydzielone. 
+Pętla skończyła się, bo d razy d przekroczyło n. Zatem n nie ma żadnego dzielnika od 2 do swojego pierwiastka. Z trzeciej 
+własności wynika, że n jest liczbą pierwszą.
+
+Dlaczego warunek ma postać d razy d mniejsze lub równe n, a nie d mniejsze lub równe pierwiastkowi z n? Warunek 
+z pierwiastkiem wymagałby liczenia pierwiastka w każdym obrocie od nowa. Mnożenie jest prostsze i szybsze.
